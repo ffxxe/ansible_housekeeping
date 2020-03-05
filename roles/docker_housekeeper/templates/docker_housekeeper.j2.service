@@ -1,0 +1,11 @@
+# {{ ansible_managed }}
+[Unit]
+Description=Docker housekeeper for {{ item.key }}
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart={{ docker_housekeeper_basedir }}/docker_housekeeper.sh
+
+[Install]
+WantedBy=multi-user.target

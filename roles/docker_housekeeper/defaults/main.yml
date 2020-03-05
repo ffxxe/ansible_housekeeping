@@ -1,0 +1,7 @@
+---
+docker_housekeeper_basedir: /opt/docker_housekeeper
+
+docker_housekeeper_envs_config:
+    dev:
+        timer_hours: 1
+        timer_weeks: 1

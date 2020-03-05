@@ -1,0 +1,12 @@
+# {{ ansible_managed }}
+[Unit]
+Description=Docker housekeeper timer for {{ item.key }}
+Requires=docker_housekeeper_{{ item.key }}.service
+
+[Timer]
+OnBootSec={{ item.value.timer_hours }}h
+OnUnitActiveSec={{ item.value.timer_weeks }}w
+Unit=docker_housekeeper_{{ item.key }}.service
+
+[Install]
+WantedBy=timer.target

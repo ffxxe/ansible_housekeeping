@@ -1,0 +1,6 @@
+---
+
+- include: install_docker_housekeeper.yml
+  tags:
+    - docker_housekeeper
+    - docker_housekeeper_install

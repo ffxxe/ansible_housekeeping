@@ -1,0 +1,40 @@
+---
+- name: Create folders for docker housekeeper
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "root"
+    mode: 0700
+  with_items:
+    - "{{ docker_housekeeper_basedir }}"
+
+- name: Install docker housekeeper
+  template:
+    src: "docker_housekeeper.sh"
+    dest: "{{ docker_housekeeper_basedir }}/docker_housekeeper.sh"
+    owner: "root"
+    mode: 0700
+
+- name: Create systemd service
+  template:
+    src: "docker_housekeeper.j2.service"
+    dest: "/etc/systemd/system/docker_housekeeper_{{ item.key }}.service"
+    owner: "root"
+    mode: 0600
+  with_dict: "{{ docker_housekeeper_envs_config }}"
+
+- name: Create systemd timer
+  template:
+    src: "docker_housekeeper.j2.timer"
+    dest: "/etc/systemd/system/docker_housekeeper_{{ item.key }}.timer"
+    owner: "root"
+    mode: 0600
+  with_dict: "{{ docker_housekeeper_envs_config }}"
+
+- name: Docker housekeeper daemon reload
+  systemd:
+    name: "docker_housekeeper_{{ item.key }}.timer"
+    daemon_reload: yes
+    state: started
+    enabled: yes
+  with_dict: "{{ docker_housekeeper_envs_config }}"
