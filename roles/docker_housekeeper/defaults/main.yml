@@ -1,7 +1,8 @@
 ---
 docker_housekeeper_basedir: /opt/docker_housekeeper
+docker_housekeeper_systemd: /etc/systemd/system
 
 docker_housekeeper_envs_config:
     dev:
-        timer_hours: 1
-        timer_weeks: 1
+        timer_hours: 24
+        housekeeper_hours: 720
