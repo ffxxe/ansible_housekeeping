@@ -10,15 +10,16 @@
 
 - name: Install docker housekeeper
   template:
-    src: "docker_housekeeper.sh"
+    src: "docker_housekeeper.j2.sh"
     dest: "{{ docker_housekeeper_basedir }}/docker_housekeeper.sh"
     owner: "root"
     mode: 0700
+  with_dict: "{{ docker_housekeeper_envs_config }}"
 
 - name: Create systemd service
   template:
     src: "docker_housekeeper.j2.service"
-    dest: "/etc/systemd/system/docker_housekeeper_{{ item.key }}.service"
+    dest: "{{ docker_housekeeper_systemd }}/docker_housekeeper.service"
     owner: "root"
     mode: 0600
   with_dict: "{{ docker_housekeeper_envs_config }}"
@@ -26,14 +27,14 @@
 - name: Create systemd timer
   template:
     src: "docker_housekeeper.j2.timer"
-    dest: "/etc/systemd/system/docker_housekeeper_{{ item.key }}.timer"
+    dest: "{{ docker_housekeeper_systemd }}/docker_housekeeper.timer"
     owner: "root"
     mode: 0600
   with_dict: "{{ docker_housekeeper_envs_config }}"
 
 - name: Docker housekeeper daemon reload
   systemd:
-    name: "docker_housekeeper_{{ item.key }}.timer"
+    name: "docker_housekeeper.timer"
     daemon_reload: yes
     state: started
     enabled: yes
